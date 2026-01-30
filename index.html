@@ -3,83 +3,558 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neon Lamp Shop</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>LustraShop - Neon Lamp Store</title>
+    <link rel="stylesheet" href="style.css">
     <style>
-        body {
-            background: #111;
-            color: #fff;
-            font-family: Arial, sans-serif;
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0a2e 100%);
+            color: #fff;
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+        }
+
+        header {
+            background: rgba(10, 10, 10, 0.95);
+            padding: 20px;
+            border-bottom: 2px solid #00ffcc;
+            box-shadow: 0 0 20px #00ffcc, 0 0 40px #ff00ff;
             display: flex;
-            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: bold;
+            color: #ffcc00;
+            text-shadow: 0 0 20px #ffcc00, 0 0 30px #ff6600;
+            letter-spacing: 2px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            color: #00ffcc;
+            text-decoration: none;
+            cursor: pointer;
+            padding: 10px 15px;
+            border: 1px solid #00ffcc;
+            border-radius: 5px;
+            transition: all 0.3s;
+            text-shadow: 0 0 10px #00ffcc;
+        }
+
+        .nav-links a:hover {
+            background: #00ffcc;
+            color: #0a0a0a;
+            box-shadow: 0 0 20px #00ffcc;
+            text-shadow: none;
+        }
+
+        .cart-icon {
+            position: relative;
+            font-size: 24px;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ff00ff;
+            color: #fff;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            box-shadow: 0 0 10px #ff00ff;
         }
 
-        .neon {
-            text-shadow: 0 0 20px #00ffcc, 0 0 30px #00ffcc, 0 0 40px #ff00ff;
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
         }
 
-        input, button {
-            padding: 10px;
-            margin: 10px;
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1a0a2e 0%, #0f3460 100%);
+            margin: 5% auto;
+            padding: 40px;
+            border: 2px solid #00ffcc;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 10px;
+            box-shadow: 0 0 30px #00ffcc, 0 0 60px #ff00ff;
+        }
+
+        .close {
+            color: #00ffcc;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            text-shadow: 0 0 10px #00ffcc;
+        }
+
+        .close:hover {
+            color: #ffcc00;
+        }
+
+        .form-group {
+            margin: 20px 0;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #00ffcc;
+            text-shadow: 0 0 10px #00ffcc;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid #ff6600;
+            color: #fff;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #00ffcc;
+            box-shadow: 0 0 20px #00ffcc, inset 0 0 10px rgba(0, 255, 204, 0.2);
+        }
+
+        .btn {
+            padding: 15px 30px;
+            background: linear-gradient(45deg, #ff6600, #ffcc00);
+            color: #000;
             border: none;
             border-radius: 5px;
-        }
-
-        input {
-            background: #222;
-            color: #fff;
-            border: 1px solid #00ffcc;
-        }
-
-        button {
-            background: #00ffcc;
-            color: #111;
+            font-size: 16px;
+            font-weight: bold;
             cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 0 15px #ff6600;
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .animated {
-            animation: glow 1s ease-in-out infinite alternate;
+        .btn:hover {
+            background: linear-gradient(45deg, #ffcc00, #ff6600);
+            box-shadow: 0 0 25px #ffcc00, 0 0 35px #ff00ff;
+            transform: scale(1.05);
         }
 
-        @keyframes glow {
-            0% { box-shadow: 0 0 5px #00ffcc; }
-            100% { box-shadow: 0 0 20px #00ffcc; }
+        .btn-secondary {
+            background: linear-gradient(45deg, #00ffcc, #00ccff);
+            color: #000;
+            box-shadow: 0 0 15px #00ffcc;
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(45deg, #00ccff, #00ffcc);
+            box-shadow: 0 0 25px #00ccff, 0 0 35px #ff00ff;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .product-card {
+            background: linear-gradient(135deg, rgba(10, 10, 10, 0.8), rgba(26, 10, 46, 0.8));
+            border: 2px solid #ff6600;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+            box-shadow: 0 0 10px #ff6600;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(0, 255, 204, 0.3), transparent);
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .product-card:hover {
+            border-color: #00ffcc;
+            box-shadow: 0 0 25px #00ffcc, 0 0 40px #ff00ff;
+            transform: scale(1.05);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #ff6600, #ffcc00);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .product-name {
+            font-size: 20px;
+            font-weight: bold;
+            color: #00ffcc;
+            text-shadow: 0 0 10px #00ffcc;
+            margin: 10px 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .product-description {
+            color: #aaa;
+            font-size: 14px;
+            margin: 10px 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .product-price {
+            font-size: 28px;
+            font-weight: bold;
+            color: #ffcc00;
+            text-shadow: 0 0 15px #ffcc00;
+            margin: 15px 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .product-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(45deg, #00ffcc, #00ccff);
+            color: #000;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 0 10px #00ffcc;
+            position: relative;
+            z-index: 1;
+        }
+
+        .product-btn:hover {
+            background: linear-gradient(45deg, #00ccff, #00ffcc);
+            box-shadow: 0 0 20px #00ffcc;
+            transform: scale(1.05);
+        }
+
+        .cart-container {
+            background: linear-gradient(135deg, #1a0a2e 0%, #0f3460 100%);
+            border: 2px solid #00ffcc;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 20px #00ffcc;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.5);
+            margin: 10px 0;
+            border-radius: 5px;
+            border-left: 3px solid #ff6600;
+        }
+
+        .cart-item-info {
+            flex: 1;
+        }
+
+        .cart-item-name {
+            color: #00ffcc;
+            font-weight: bold;
+        }
+
+        .cart-item-price {
+            color: #ffcc00;
+            font-weight: bold;
+        }
+
+        .cart-remove {
+            background: #ff00ff;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 0 10px #ff00ff;
+        }
+
+        .cart-remove:hover {
+            background: #ff0088;
+            box-shadow: 0 0 20px #ff00ff;
+        }
+
+        .cart-total {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 204, 0, 0.1);
+            border: 2px solid #ffcc00;
+            border-radius: 5px;
+            text-align: right;
+            font-size: 20px;
+            color: #ffcc00;
+            text-shadow: 0 0 10px #ffcc00;
+        }
+
+        .checkout-section {
+            background: linear-gradient(135deg, #1a0a2e 0%, #0f3460 100%);
+            border: 2px solid #ff00ff;
+            border-radius: 10px;
+            padding: 30px;
+            margin-top: 30px;
+            box-shadow: 0 0 30px #ff00ff;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 48px;
+            color: #ffcc00;
+            text-shadow: 0 0 20px #ffcc00, 0 0 40px #ff6600;
+            margin: 30px 0;
+            letter-spacing: 2px;
+        }
+
+        h2 {
+            color: #00ffcc;
+            text-shadow: 0 0 15px #00ffcc;
+            margin: 20px 0 10px 0;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .empty-message {
+            text-align: center;
+            color: #ff6600;
+            font-size: 18px;
+            padding: 40px;
+            text-shadow: 0 0 10px #ff6600;
+        }
+
+        .filter-input {
+            width: 100%;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid #00ffcc;
+            color: #00ffcc;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px #00ffcc;
+        }
+
+        .filter-input::placeholder {
+            color: #666;
+        }
+
+        .filter-input:focus {
+            outline: none;
+            box-shadow: 0 0 20px #00ffcc;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+                gap: 15px;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 20% auto;
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 32px;
+            }
+
+            .logo {
+                font-size: 24px;
+            }
         }
     </style>
 </head>
 <body>
-    <h1 class="neon">Welcome to the Neon Lamp Shop!</h1>
+    <header>
+        <div class="logo">💡 LustraShop</div>
+        <div class="nav-links">
+            <a onclick="showSection('home')">🏠 Главная</a>
+            <a onclick="showSection('shop')">🛍️ Каталог</a>
+            <a onclick="showSection('cart')">🛒 Корзина</a>
+            <a onclick="openLoginModal()">👤 Вход</a>
+        </div>
+    </header>
 
-    <div>
-        <h2>Login / Registration</h2>
-        <form id="auth-form">
-            <input type="text" placeholder="Username" required>
-            <input type="password" placeholder="Password" required>
-            <button type="submit" class="animated">Login / Register</button>
-        </form>
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeLoginModal()">&times;</span>
+            <h2 style="color: #00ffcc; text-align: center; text-shadow: 0 0 10px #00ffcc;">Вход / Регистрация</h2>
+            
+            <div id="loginForm">
+                <h3 style="color: #ffcc00; text-align: center;">Вход</h3>
+                <div class="form-group">
+                    <label for="loginEmail">Email:</label>
+                    <input type="email" id="loginEmail" placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Пароль:</label>
+                    <input type="password" id="loginPassword" placeholder="••••••••">
+                </div>
+                <button class="btn" onclick="login()">Войти</button>
+                <p style="text-align: center; margin-top: 15px; color: #aaa;">
+                    Нет аккаунта? <a onclick="toggleAuthForm()" style="color: #00ffcc; cursor: pointer; text-shadow: 0 0 10px #00ffcc;">Зарегистрироваться</a>
+                </p>
+            </div>
+
+            <div id="registerForm" style="display: none;">
+                <h3 style="color: #ffcc00; text-align: center;">Регистрация</h3>
+                <div class="form-group">
+                    <label for="regName">Имя:</label>
+                    <input type="text" id="regName" placeholder="Ваше имя">
+                </div>
+                <div class="form-group">
+                    <label for="regEmail">Email:</label>
+                    <input type="email" id="regEmail" placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label for="regPassword">Пароль:</label>
+                    <input type="password" id="regPassword" placeholder="••••••••">
+                </div>
+                <button class="btn" onclick="register()">Зарегистрироваться</button>
+                <p style="text-align: center; margin-top: 15px; color: #aaa;">
+                    Уже есть аккаунт? <a onclick="toggleAuthForm()" style="color: #00ffcc; cursor: pointer; text-shadow: 0 0 10px #00ffcc;">Войти</a>
+                </p>
+            </div>
+        </div>
     </div>
 
-    <div>
-        <h2>Product Catalog</h2>
-        <ul>
-            <li>Lamp 1 - $50</li>
-            <li>Lamp 2 - $75</li>
-            <li>Lamp 3 - $100</li>
-        </ul>
+    <!-- Home Section -->
+    <div id="home" class="section active">
+        <div class="container">
+            <h1>🌟 Добро пожаловать в LustraShop 🌟</h1>
+            <div style="text-align: center; margin: 40px 0; font-size: 18px; color: #00ffcc; text-shadow: 0 0 10px #00ffcc;">
+                <p>Мы предлагаем самые красивые неоновые люстры</p>
+                <p>для вашего дома и офиса</p>
+                <br>
+                <button class="btn" onclick="showSection('shop')">Начать покупки →</button>
+            </div>
+        </div>
     </div>
 
-    <div>
-        <h2>Shopping Cart</h2>
-        <p>No items in your cart.</p>
+    <!-- Shop Section -->
+    <div id="shop" class="section">
+        <div class="container">
+            <h1>🛍️ Каталог люстр</h1>
+            <input type="text" class="filter-input" id="searchInput" placeholder="🔍 Поиск люстры..." onkeyup="filterProducts()">
+            
+            <div class="products-grid" id="productsGrid">
+                <!-- Products will be generated here -->
+            </div>
+        </div>
     </div>
 
-    <div>
-        <h2>Checkout</h2>
-        <button class="animated">Proceed to Checkout</button>
+    <!-- Cart Section -->
+    <div id="cart" class="section">
+        <div class="container">
+            <h1>🛒 Ваша корзина</h1>
+            
+            <div class="cart-container">
+                <div id="cartItems"></div>
+                <div class="cart-total">
+                    Итого: <span id="cartTotal">$0</span>
+                </div>
+            </div>
+
+            <div class="checkout-section">
+                <h2>📦 Оформление заказа</h2>
+                <div class="form-group">
+                    <label for="fullName">Полное имя:</label>
+                    <input type="text" id="fullName" placeholder="Ваше ФИО">
+                </div>
+                <div class="form-group">
+                    <label for="phone">Телефон:</label>
+                    <input type="tel" id="phone" placeholder="+7 (999) 999-99-99">
+                </div>
+                <div class="form-group">
+                    <label for="address">Адрес доставки:</label>
+                    <input type="text" id="address" placeholder="Улица, дом, квартира">
+                </div>
+                <div class="form-group">
+                    <label for="city">Город:</label>
+                    <input type="text" id="city" placeholder="Ваш город">
+                </div>
+                <button class="btn" onclick="checkout()">✓ Оформить заказ</button>
+            </div>
+        </div>
     </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
